@@ -35,7 +35,7 @@ class TimeZoneFinder
         return $result;
     }
 
-    public function createMask(int $gmt): string
+    private function createMask(int $gmt): string
     {
         return 1 << ($gmt + 12);
     }
