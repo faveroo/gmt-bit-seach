@@ -8,7 +8,9 @@ $cities = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gmt = (int) $_POST['gmt'];
-    $cities = $finder->findCities($gmt);
+    $exclude = isset($_POST['exclude']);
+    $cities = $finder->findCities($gmt, $exclude);
+    $count = count($cities);
 }
 ?>
 
@@ -55,14 +57,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button type="submit">
         Encontrar Cidades
     </button>
+
+    <label>
+        <input type="checkbox" name="exclude" id="">
+        Excluir GMT informado
+    </label>
 </form>
 
 <?php if (!empty($cities)): ?>
     <div class="result">
-        <h3>Cidades encontradas</h3>
+        <h3>
+            <?= $count ?> cidade(s) encontrada(s)
+        </h3>
 
         <ul>
-            <?php foreach ($cities as $city): ?>
+            <?php foreach ($cities as $idx => $city): ?>
                 <li><?= htmlspecialchars($city) ?></li>
             <?php endforeach; ?>
         </ul>
