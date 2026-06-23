@@ -34,21 +34,26 @@ class TimeZoneFinder
         1 << 24 => ['Auckland', 'Wellington'],                // UTC+12
     ];
 
-    public function findCities(int $gmt): array
+    public function findCities(int $gmt, bool $exclude = false): array
     {
         $result = [];
-        $masked = $this->createMask($gmt);
+        $searchMask = $this->createMask($gmt);
 
-        foreach($this->citiesByMask as $mask => $city) {
-            if($masked & $mask) {
-                $result = $city;
+        if ($exclude) {
+            $searchMask = ~$searchMask;
+        }
+
+        
+        foreach($this->citiesByMask as $mask => $cities) {
+            if ($mask & $searchMask) {
+                $result = array_merge($result, $cities);
             }
         }
 
         return $result;
     }
 
-    private function createMask(int $gmt): string
+    private function createMask(int $gmt): int
     {
         return 1 << ($gmt + 12);
     }
